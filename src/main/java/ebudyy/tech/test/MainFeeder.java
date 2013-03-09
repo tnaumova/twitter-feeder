@@ -1,33 +1,20 @@
 package ebudyy.tech.test;
 
-import java.io.Console;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import ebudyy.tech.test.StreamReaderController.StreamEntryListener;
+import ebudyy.tech.test.config.ConsoleAppConfig;
 
 /**
- * Hello world!
- *
+ * Tool entry point
  */
 public class MainFeeder {
-    public static void main( String[] args )
-    {
-        System.out.println( "Welcome to Twitter Feeder!" );
-        Console console = System.console();
-        if (console == null) {
-            System.err.println("Cannot proceed. No console object found.");
-            System.exit(1);
-        }
-        
-        StreamReaderController reader = StreamReaderController.getInstance();
-        reader.connect(new StreamEntryListener() {
-			
-			public void onEntry(String line) {
-				System.out.println(line);
-			}
-		});
-        
-        console.readLine("");
-        reader.disconnect();
-        System.exit(1);
-    }
+
+	public static void main(String[] args) {
+		System.out.println("Welcome to Twitter Feeder!");
+		ApplicationContext ctx = new AnnotationConfigApplicationContext(
+				ConsoleAppConfig.class);
+		ConsoleApplication app = ctx.getBean(ConsoleApplication.class);
+		app.start();
+	}
 }

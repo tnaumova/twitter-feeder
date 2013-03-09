@@ -1,4 +1,4 @@
-package ebudyy.tech.test;
+package ebudyy.tech.test.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,40 +7,34 @@ import java.io.UnsupportedEncodingException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 
-class HttpHelper {
+/**
+ * Helper class to make HTTP request via HTTPClient library 
+ */
+public class HttpHelper {
 
 	private static final String PATH = "/1/statuses/filter.json";
-	private String user = "_tania0_0";
-	private String password = "ebuddytest";
 	private String keyWords;
 
-	private final DefaultHttpClient httpclient = new DefaultHttpClient();
-	private final HttpHost target;
+	private HttpClient httpclient;
+	private HttpHost target;
+	
 	private HttpPost httpPost;
 	private ResponseHandler responseHandler;
 
-	public HttpHelper() {
-		target = new HttpHost("stream.twitter.com", 443, "https");
-		setCredetials();
+	public HttpHelper(HttpHost target, HttpClient httpclient) {
+		this.httpclient = httpclient;
+		this.target = target;
 	}
 
 	private StringEntity buildPostRequest() throws UnsupportedEncodingException {
 		StringEntity postEntity = new StringEntity("track=" + keyWords, "UTF-8");
 		postEntity.setContentType("application/x-www-form-urlencoded");
 		return postEntity;
-	}
-
-	private void setCredetials() {
-		httpclient.getCredentialsProvider().setCredentials(
-				new AuthScope(target.getHostName(), target.getPort()),
-				new UsernamePasswordCredentials(user, password));
 	}
 
 	public void connect() throws UnsupportedEncodingException,
@@ -55,7 +49,7 @@ class HttpHelper {
 		System.out.println("Connecting to Twitter...");
 		HttpResponse response = httpclient.execute(target, httpPost);
 		if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-			responseHandler.onErrorStatus(response);
+			responseHandler.onErrorStatus(response.getStatusLine().getReasonPhrase());
 		} else{
 			responseHandler.onResponse(response.getEntity().getContent());
 		}
@@ -71,11 +65,15 @@ class HttpHelper {
 		this.responseHandler = responseHandler;
 	}
 
+	public void setKeyWords(String keyWords) {
+		this.keyWords = keyWords;
+	}
+
 	public interface ResponseHandler {
-		void onErrorStatus(HttpResponse response);
+		
+		void onErrorStatus(String errorMessage);
 
 		void onResponse(InputStream responseContent);
-
 	}
 
 }

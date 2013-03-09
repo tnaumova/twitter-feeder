@@ -1,27 +1,16 @@
-package ebudyy.tech.test;
+package ebudyy.tech.test.stream;
 
 import java.lang.Thread.State;
 
+public class StreamReaderController {
 
-
-class StreamReaderController {
-
-	private static StreamReaderController INSTANCE;
 	private StreamReaderThread readerThread;
 
-	private StreamReaderController() {
-		readerThread = new StreamReaderThread();
+	public StreamReaderController(StreamReaderThread readerThread) {
+		this.readerThread = readerThread;
 	}
 
-	public static StreamReaderController getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new StreamReaderController();
-		}
-		return INSTANCE;
-	}
-
-	public void connect(StreamEntryListener listener) {
-		readerThread.setListener(listener);
+	public void connect() {
 		readerThread.start();
 		try {
 			Thread.sleep(1000);
@@ -53,6 +42,10 @@ class StreamReaderController {
 
 	public void disconnect() {
 		readerThread.interrupt();
+	}
+
+	public void setKeyWords(String keyWords) {
+		readerThread.setKeyWords(keyWords);
 	}
 
 	public interface StreamEntryListener {
