@@ -17,7 +17,7 @@ import ebudyy.tech.test.stream.StreamReaderController.StreamEntryListener;
  * {@link HttpHelper}
  */
 @Component
-public class StreamReaderThread extends Thread implements ResponseHandler {
+public class StreamReaderThread extends Thread {
 
     @Autowired
     private StreamEntryListener entryListener;
@@ -34,7 +34,7 @@ public class StreamReaderThread extends Thread implements ResponseHandler {
 
     public void run() {
         try {
-            httpHelper.setResponseHandler(this);
+            httpHelper.setResponseHandler(getResponseHandler());
             while (running.get()) {
                 if (!connected.getAndSet(false)) {
                     connected.set(true);
@@ -51,7 +51,7 @@ public class StreamReaderThread extends Thread implements ResponseHandler {
     /**
      *  Handles response received from {@link HttpHelper}
      */
-    public void onResponse(InputStream responseContent) {
+    private void handleResponse(InputStream responseContent) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(responseContent));
         String line = null;
         try {
@@ -69,12 +69,6 @@ public class StreamReaderThread extends Thread implements ResponseHandler {
         } catch (IOException e) {
             e.printStackTrace(); 
         }
-    }
-
-    public void onErrorStatus(String errorMessage) {
-        System.err.println("Response returned unsuccessful status :" + errorMessage);
-        System.out.println("Execution terminated.");
-        System.exit(0);
     }
 
     public void setKeyWords(String keyWords) {
@@ -112,5 +106,22 @@ public class StreamReaderThread extends Thread implements ResponseHandler {
             }
         }
         paused.set(false);  
+    }
+
+    private ResponseHandler getResponseHandler() {
+        return new ResponseHandler() {
+    
+            @Override
+            public void onResponse(InputStream responseContent) {
+                handleResponse(responseContent);
+            }
+    
+            @Override
+            public void onErrorStatus(String errorMessage) {
+                System.err.println("Response returned unsuccessful status :" + errorMessage);
+                System.out.println("Execution terminated.");
+                System.exit(0);
+            }
+        };
     }
 }

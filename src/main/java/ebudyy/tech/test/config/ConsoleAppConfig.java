@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 import ebudyy.tech.test.ConsoleApplication;
-import ebudyy.tech.test.stream.HttpHelper;
 import ebudyy.tech.test.stream.StreamReaderController.StreamEntryListener;
 
 /**
@@ -36,11 +35,6 @@ public class ConsoleAppConfig {
 	}
 
 	@Bean
-	public HttpHelper getHttpHelper() {
-		return new HttpHelper(getHttpTarget(), getHttpClient());
-	}
-
-	@Bean
 	@Scope
 	/**
 	 * Initializes HTTP client, which use basic authentication to connect to twitter API 
@@ -55,7 +49,8 @@ public class ConsoleAppConfig {
 	}
 
 
-    private HttpHost getHttpTarget() {
+	@Bean
+    public HttpHost getHttpTarget() {
     	return new HttpHost("stream.twitter.com", 443, "https");
     }
 

@@ -11,28 +11,30 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Helper class to make HTTP request via HTTPClient library 
  */
+@Component
 public class HttpHelper {
 
 	private static final String PATH = "/1/statuses/filter.json";
+	
 	private String keyWords;
 
+	@Autowired
 	private HttpClient httpclient;
+	
+	@Autowired
 	private HttpHost target;
 	
 	private HttpPost httpPost;
+	
 	private ResponseHandler responseHandler;
 
-	public HttpHelper(HttpHost target, HttpClient httpclient) {
-		this.httpclient = httpclient;
-		this.target = target;
-	}
-
-	public void connect() throws UnsupportedEncodingException,
-			IOException, ClientProtocolException {
+	public void connect() throws UnsupportedEncodingException,IOException, ClientProtocolException {
 		if (responseHandler == null) {
 			System.err.println("Response handler should be defined");
 			return;
