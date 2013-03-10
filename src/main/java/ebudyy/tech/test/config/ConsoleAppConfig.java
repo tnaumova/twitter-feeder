@@ -11,9 +11,7 @@ import org.springframework.context.annotation.Scope;
 
 import ebudyy.tech.test.ConsoleApplication;
 import ebudyy.tech.test.stream.HttpHelper;
-import ebudyy.tech.test.stream.StreamReaderController;
 import ebudyy.tech.test.stream.StreamReaderController.StreamEntryListener;
-import ebudyy.tech.test.stream.StreamReaderThread;
 
 /**
  * Spring configuration to initialize {@link ConsoleApplication} 
@@ -34,17 +32,6 @@ public class ConsoleAppConfig {
 		};
 	}
 	
-	@Scope
-	public StreamReaderController getStreamReadController() {
-		return new StreamReaderController(readerThread());
-	}
-
-	@Bean
-	public StreamReaderThread readerThread() {
-		StreamReaderThread readerThread = new StreamReaderThread(getHttpHelper());
-		readerThread.setOnEntryListener(getListener());
-		return readerThread;
-	}
 
 	@Bean
 	public HttpHelper getHttpHelper() {
@@ -66,9 +53,4 @@ public class ConsoleAppConfig {
 		return httpclient;
 	}
 
-	@Bean
-	public ConsoleApplication getConsoleApplication(){
-		return new ConsoleApplication(getStreamReadController());
-	}
-	
 }

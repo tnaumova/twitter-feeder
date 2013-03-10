@@ -1,21 +1,17 @@
 package ebudyy.tech.test;
 
-import java.io.BufferedReader;
 import java.io.Console;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Scanner;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import ebudyy.tech.test.stream.StreamReaderController;
 
+@Component
 public class ConsoleApplication {
 
+	@Autowired
 	StreamReaderController reader;
-
-	public ConsoleApplication(StreamReaderController reader) {
-		this.reader = reader;
-	}
 
 	public void start() {
 		Console console = System.console();

@@ -40,7 +40,7 @@ public class HttpHelper {
 	public void connect() throws UnsupportedEncodingException,
 			IOException, ClientProtocolException {
 		if (responseHandler == null) {
-			System.err.println("Respnse handler should be defined");
+			System.err.println("Response handler should be defined");
 			return;
 		}
 		
@@ -61,6 +61,7 @@ public class HttpHelper {
 		}
 	}
 
+	
 	public void setResponseHandler(ResponseHandler responseHandler) {
 		this.responseHandler = responseHandler;
 	}

@@ -1,26 +1,28 @@
 package ebudyy.tech.test.stream;
 
-import java.applet.AppletContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import ebudyy.tech.test.stream.HttpHelper.ResponseHandler;
 import ebudyy.tech.test.stream.StreamReaderController.StreamEntryListener;
 
 /**
- * Thread class to read data from stream, which is received from {@link HttpHelper} 
+ * Thread class to read data from stream, which is received from
+ * {@link HttpHelper}
  */
+@Component
 public class StreamReaderThread extends Thread implements ResponseHandler {
 
+	@Autowired
 	private StreamEntryListener entryListener;
 
+	@Autowired
 	private HttpHelper httpHelper;
-
-	public StreamReaderThread(HttpHelper httpHelper) {
-		this.httpHelper = httpHelper;
-	}
 
 	public void run() {
 		try {
@@ -53,17 +55,8 @@ public class StreamReaderThread extends Thread implements ResponseHandler {
 		interrupt();
 	}
 
-	public void setOnEntryListener(StreamEntryListener entryListener) {
-		if (entryListener == null) {
-			System.err.println("Stream Listener should be defined");
-			return;
-		}
-
-		this.entryListener = entryListener;
-	}
-
 	public void setKeyWords(String keyWords) {
 		httpHelper.setKeyWords(keyWords);
 	}
-	
+
 }

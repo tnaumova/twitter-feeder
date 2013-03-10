@@ -2,13 +2,14 @@ package ebudyy.tech.test.stream;
 
 import java.lang.Thread.State;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class StreamReaderController {
 
+	@Autowired
 	private StreamReaderThread readerThread;
-
-	public StreamReaderController(StreamReaderThread readerThread) {
-		this.readerThread = readerThread;
-	}
 
 	public void connect() {
 		readerThread.start();
