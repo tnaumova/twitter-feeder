@@ -9,7 +9,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class MainFeeder {
 
 	public static void main(String[] args) {
-		System.out.println("Welcome to Twitter Feeder!");
 		ApplicationContext ctx = new AnnotationConfigApplicationContext("ebudyy.tech.test");
 		ConsoleApplication app = ctx.getBean(ConsoleApplication.class);
 		app.start();

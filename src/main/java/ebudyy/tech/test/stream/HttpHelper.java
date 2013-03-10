@@ -31,12 +31,6 @@ public class HttpHelper {
 		this.target = target;
 	}
 
-	private StringEntity buildPostRequest() throws UnsupportedEncodingException {
-		StringEntity postEntity = new StringEntity("track=" + keyWords, "UTF-8");
-		postEntity.setContentType("application/x-www-form-urlencoded");
-		return postEntity;
-	}
-
 	public void connect() throws UnsupportedEncodingException,
 			IOException, ClientProtocolException {
 		if (responseHandler == null) {
@@ -46,7 +40,6 @@ public class HttpHelper {
 		
 		httpPost = new HttpPost(PATH);
 		httpPost.setEntity(buildPostRequest());
-		System.out.println("Connecting to Twitter...");
 		HttpResponse response = httpclient.execute(target, httpPost);
 		if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
 			responseHandler.onErrorStatus(response.getStatusLine().getReasonPhrase());
@@ -57,7 +50,8 @@ public class HttpHelper {
 
 	public void disconnect() {
 		if (httpPost != null) {
-			httpPost.releaseConnection();
+			httpPost.abort();
+			httpPost = null;
 		}
 	}
 
@@ -70,7 +64,13 @@ public class HttpHelper {
 		this.keyWords = keyWords;
 	}
 
-	public interface ResponseHandler {
+	private StringEntity buildPostRequest() throws UnsupportedEncodingException {
+    	StringEntity postEntity = new StringEntity("track=" + keyWords, "UTF-8");
+    	postEntity.setContentType("application/x-www-form-urlencoded");
+    	return postEntity;
+    }
+
+    public interface ResponseHandler {
 		
 		void onErrorStatus(String errorMessage);
 

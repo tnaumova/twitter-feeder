@@ -23,6 +23,9 @@ public class ConsoleAppConfig {
 	private String password = "ebuddytest";
 
 	@Bean
+	/**
+	 * Simple stream message listener, rewrites entries to system output stream
+	 */
 	public StreamEntryListener getListener() {
 		return new StreamEntryListener() {
 
@@ -31,19 +34,17 @@ public class ConsoleAppConfig {
 			}
 		};
 	}
-	
 
 	@Bean
 	public HttpHelper getHttpHelper() {
 		return new HttpHelper(getHttpTarget(), getHttpClient());
 	}
 
-	private HttpHost getHttpTarget() {
-		return new HttpHost("stream.twitter.com", 443, "https");
-	}
-	
 	@Bean
 	@Scope
+	/**
+	 * Initializes HTTP client, which use basic authentication to connect to twitter API 
+	 */
 	public HttpClient getHttpClient() {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
 		HttpHost target = getHttpTarget();
@@ -52,5 +53,10 @@ public class ConsoleAppConfig {
 				new UsernamePasswordCredentials(user, password));
 		return httpclient;
 	}
+
+
+    private HttpHost getHttpTarget() {
+    	return new HttpHost("stream.twitter.com", 443, "https");
+    }
 
 }
